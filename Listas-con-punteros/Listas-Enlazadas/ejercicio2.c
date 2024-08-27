@@ -40,17 +40,19 @@ typedef struct nodoProducto
 } tListaProductos;
 
 // prototipo de funciones
-void inicializarLista();                   //
-bool listaVacia(tListaProductos *);        //
-tProductos agregarProducto();              //
-void insertarProducto();                   //
-void insertarProductoPredeterminado();     //
-void insertarProductoEnPosicionDefinida(); //
-void insertarProductoAlInicio();           //
+void inicializarLista();
+bool listaVacia(tListaProductos *);
+tProductos agregarProducto();
+void insertarProducto();
+void insertarProductoPredeterminado();
+void insertarProductoEnPosicionDefinida();
+void insertarProductoAlInicio();
 void insertarPrimerProducto();
 void insertarProductoFinal();
 void eliminarProducto();
-void listarProductos(); //
+void eliminarPrimerNodo();
+void eliminarProductoEnPosicionDefinida();
+void listarProductos();
 void menu();
 
 // variables globales
@@ -147,7 +149,8 @@ void insertarProductoEnPosicionDefinida()
 
     if (listaVacia(listaProductos))
     {
-        printf("El producto no se puede ingresar en dicha posicion debido a que no hay elementos en la lista\n");
+        printf("\nEl producto no se puede ingresar en dicha posicion debido a que no hay elementos en la lista\n");
+        insertarProducto();
     }
 
     for (int i = 1; i < (posicion - 1); i++)
@@ -204,7 +207,71 @@ void insertarProductoFinal()
 }
 
 // eliminacion de datos a la lista
-void eliminarProducto() {}
+void eliminarProducto()
+{
+    int opcion;
+
+    printf("\n\t\t ***** MENU ELIMINAR PRODUCTO *****\n");
+    printf("1 - Eliminar el primer producto de la lista\n");
+    printf("2 - Eliminar un producto definido de la lista\n");
+    printf("3 - volver al menu\n");
+    printf("Ingrese la opcion: ");
+    scanf("%d", &opcion);
+
+    switch (opcion)
+    {
+    case 1:
+        eliminarPrimerNodo();
+        break;
+    case 2:
+        eliminarProductoEnPosicionDefinida();
+        break;
+    case 3:
+        menu();
+        break;
+    default:
+        printf("El numero ingresado no se encuentra en las opciones");
+        break;
+    }
+}
+
+void eliminarPrimerNodo()
+{
+    tListaProductos *productoAux;
+
+    productoAux = listaProductos;
+    listaProductos = productoAux->siguiente;
+    printf("\nEl primer producto eliminado correctamente.\n");
+    free(productoAux);
+}
+
+void eliminarProductoEnPosicionDefinida()
+{
+    int posicion;
+    tListaProductos *productoAux;
+    tListaProductos *productoEliminar;
+
+    productoAux = listaProductos;
+
+    printf("Ingrese la posicion donde quieres guardar el producto: ");
+    scanf("%d", &posicion);
+
+    if (listaVacia(listaProductos))
+    {
+        printf("\nEl producto no se puede ingresar en dicha posicion debido a que no hay elementos en la lista\n");
+        insertarProducto();
+    }
+
+    for (int i = 1; i < (posicion - 1); i++)
+    {
+        productoAux = productoAux->siguiente;
+    }
+
+    productoEliminar = productoAux->siguiente;
+    productoAux->siguiente = productoEliminar->siguiente;
+    printf("producto Eliminado correctamente: %s\n", productoEliminar->producto.descripcion);
+    free(productoEliminar);
+}
 
 // visualizacion de datos a la lista
 void listarProductos()
@@ -232,7 +299,7 @@ void menu()
 
         printf("\n\t\t ***** MENU *****\t\t\n");
         printf("1 - Insertar Producto\n");
-        printf("3 - Eliminar Producto\n");
+        printf("2 - Eliminar Producto\n");
         printf("3 - Mostrar la lista de productos\n");
         printf("4 - Salir del programa\n");
         printf("Ingrese la opcion que requiera: ");
